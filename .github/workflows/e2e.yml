@@ -1,0 +1,21 @@
+name: e2e
+# This workflow is triggered on pushes to the repository.
+on: [push]
+
+jobs:
+  build:
+    name: "ie"
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: warrenbuckley/Setup-Nuget@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: yarn install
+      - run: nuget install Selenium.WebDriver.IEDriver -Version 3.150.0
+      - run: yarn storybook:build
+      - run: pwd
+      - run: node scripts/e2e.js
+        env:
+          BROWSER: ie
